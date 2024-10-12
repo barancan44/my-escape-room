@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Check</title>
+    <style>
+        body {
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+            backdrop-filter: blur(8px);
+        }
+        h1, .message {
+            font-size: 5em;
+            margin: 0;
+        }
+        input[type="password"] {
+            font-size: 1.2em;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        #passwordDots {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+        .dot {
+            color: gray;
+        }
+        .dot.filled {
+            color: yellow;
+        }
+        .success {
+            font-size: 5em;
+            color: green;
+            text-align: center;
+        }
+        .submessage {
+            font-size: 3em;
+            color: green;
+            text-align: center;
+        }
+        .error, .warning {
+            font-size: 5em;
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="title">I hope you got it right</h1>
+        <input type="password" id="password" placeholder="Enter your password" maxlength="6">
+        <div id="passwordDots">
+            <span class="dot">●</span>
+            <span class="dot">●</span>
+            <span class="dot">●</span>
+            <span class="dot">●</span>
+            <span class="dot">●</span>
+            <span class="dot">●</span>
+        </div>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const correctPassword = '445566'; // Doğru şifreyi burada belirt
+            const title = document.getElementById('title');
+            const passwordField = document.getElementById('password');
+            const passwordDots = document.getElementById('passwordDots');
+            const message = document.getElementById('message');
+            
+            passwordField.addEventListener('input', function () {
+                const length = this.value.length;
+                const dots = passwordDots.querySelectorAll('.dot');
+                dots.forEach((dot, index) => {
+                    if (index < length) {
+                        dot.classList.add('filled');
+                    } else {
+                        dot.classList.remove('filled');
+                    }
+                });
+            });
+
+            passwordField.addEventListener('keypress', function (event) {
+                if (event.key === 'Enter' && this.value.length === 6) {
+                    const userPassword = this.value;
+                    title.style.display = 'none'; // Beyaz yazıyı gizle
+                    passwordDots.style.display = 'none'; // Noktaları gizle
+                    if (userPassword === correctPassword) {
+                        passwordField.style.display = 'none'; // Doğru şifre girildiğinde şifre giriş alanını gizle
+                        message.innerHTML = `
+                            <div class='success'>Congratulations!</div>
+                            <div class='submessage'>You are now free.</div>`;
+                    } else {
+                        message.innerHTML = "<div class='error'>Try again!</div>"; // Yanlış şifre için durum
+                    }
+                }
+            });
+
+            passwordField.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' && this.value.length < 6) {
+                    event.preventDefault();
+                    title.style.display = 'none'; // Eksik şifre için beyaz yazıyı gizle
+                    message.innerHTML = "<div class='warning'>Password must be 6 characters!</div>"; // Eksik şifre için uyarı mesajı
+                }
+            });
+        });
+    </script>
+</body>
+</html>
